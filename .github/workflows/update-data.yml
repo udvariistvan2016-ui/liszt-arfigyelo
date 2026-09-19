@@ -1,0 +1,51 @@
+name: Liszt adatok frissítése
+
+on:
+  schedule:
+    # Naponta egyszer, 05:00 UTC-kor (nyáron kb. 7:00, télen 6:00 magyar idő)
+    - cron: "0 5 * * *"
+  workflow_dispatch: {}
+  # Kézi indítás: repo -> Actions fül -> "Liszt adatok frissítése" -> "Run workflow".
+  # Az első futtatást érdemes így, kézzel elindítani, és a futás logját átnézni,
+  # mielőtt a napi ütemezésre hagynánk - lásd README "Első futtatás" szakasz.
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repó kicsekkolása
+        uses: actions/checkout@v4
+
+      - name: Python telepítése
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Python függőségek telepítése
+        run: pip install -r requirements.txt
+
+      - name: Playwright Chromium telepítése (a Biom Malom adapterhez)
+        run: playwright install --with-deps chromium
+
+      - name: Adatgyűjtés futtatása (mind a 4 malom)
+        run: python -m scrapers.aggregate
+
+      - name: data/current.json és data/history.jsonl commitolása, ha változott
+        run: |
+          git config user.name "liszt-arfigyelo-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/current.json data/history.jsonl
+          if git diff --cached --quiet; then
+            echo "Nincs változás az adatokban, nincs mit commitolni."
+          else
+            git commit -m "Adatfrissítés: $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git push
+          fi

@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liszt árfigyelő</title>
+<meta name="description" content="Kedvenc malmok liszt-kínálatának, árainak és szállítási költségeinek összehasonlítása - nem hivatalos, tájékoztató jellegű eszköz.">
+<style>
+  :root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page-plane:     #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --gridline:       #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --success-text:   #006300;
+
+    --series-1: #2a78d6; /* Kecskeméti Családellátó */
+    --series-2: #eb6834; /* Garat Malom */
+    --series-3: #1baf7a; /* Csoroszlya Farm */
+    --series-4: #eda100; /* Biom Malom Bóly */
+
+    --status-good:     #0ca30c;
+    --status-warning:  #fab219;
+    --status-critical: #d03b3b;
+
+    --radius: 10px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --surface-1:      #1a1a19;
+      --page-plane:     #0d0d0d;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #898781;
+      --gridline:       #2c2c2a;
+      --baseline:       #383835;
+      --border:         rgba(255,255,255,0.10);
+      --success-text:   #0ca30c;
+
+      --series-1: #3987e5;
+      --series-2: #d95926;
+      --series-3: #199e70;
+      --series-4: #c98500;
+
+      --status-good:     #0ca30c;
+      --status-warning:  #fab219;
+      --status-critical: #e66767;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --surface-1:      #1a1a19;
+    --page-plane:     #0d0d0d;
+    --text-primary:   #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted:     #898781;
+    --gridline:       #2c2c2a;
+    --baseline:       #383835;
+    --border:         rgba(255,255,255,0.10);
+    --success-text:   #0ca30c;
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+    --series-4: #c98500;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page-plane);
+    color: var(--text-primary);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.45;
+  }
+  .wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 16px 64px;
+  }
+  header.page-header {
+    margin-bottom: 20px;
+  }
+  h1 {
+    font-size: 1.6rem;
+    margin: 0 0 4px;
+  }
+  .subtitle {
+    color: var(--text-secondary);
+    margin: 0 0 10px;
+    font-size: 0.95rem;
+  }
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  .disclaimer {
+    margin-top: 10px;
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+  .error-banner {
+    display: none;
+    margin-top: 10px;
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    background: var(--surface-1);
+    border: 1px solid var(--status-critical);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+  }
+  .error-banner.visible { display: block; }
+
+  section {
+    margin-top: 28px;
+  }
+  h2 {
+    font-size: 1.15rem;
+    margin: 0 0 12px;
+  }
+
+  .card {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    align-items: flex-end;
+    margin-bottom: 14px;
+  }
+  .filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+  }
+  select, input[type="text"], input[type="number"] {
+    font: inherit;
+    font-size: 0.9rem;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--baseline);
+    background: var(--surface-1);
+    color: var(--text-primary);
+  }
+  .checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+  }
+  .checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+  thead th {
+    text-align: left;
+    padding: 8px 10px;
+    color: var(--text-muted);
+    font-weight: 600;
+    border-bottom: 1px solid var(--gridline);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  thead th.sorted::after {
+    content: " \25BE";
+  }
+  tbody td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--gridline);
+    vertical-align: top;
+  }
+  tbody tr:hover td {
+    background: color-mix(in srgb, var(--text-primary) 4%, transparent);
+  }
+  .price-per-kg {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+  .price-per-kg.best {
+    color: var(--success-text);
+  }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    white-space: nowrap;
+    border: 1px solid transparent;
+  }
+  .badge-yes { color: var(--status-good); border-color: var(--status-good); }
+  .badge-bio { color: var(--series-3); border-color: var(--series-3); }
+  .badge-unknown { color: var(--text-muted); border-color: var(--baseline); }
+  .badge-out { color: var(--status-critical); border-color: var(--status-critical); }
+  .badge-reseller { color: var(--status-warning); border-color: var(--status-warning); }
+
+  .source-link {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+  .source-link:hover { text-decoration: underline; }
+
+  .mill-dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  .shipping-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 12px;
+  }
+  .shipping-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    background: var(--page-plane);
+  }
+  .shipping-card h3 {
+    margin: 0 0 6px;
+    font-size: 0.95rem;
+  }
+  .shipping-card p {
+    margin: 4px 0;
+    font-size: 0.83rem;
+    color: var(--text-secondary);
+  }
+
+  .calc-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    align-items: flex-end;
+    margin-top: 14px;
+  }
+  .calc-result {
+    margin-top: 12px;
+    font-size: 0.9rem;
+  }
+  .calc-result strong {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 10px;
+  }
+  .legend span.dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+
+  .chart-empty {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    padding: 24px 0;
+    text-align: center;
+  }
+
+  footer {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid var(--gridline);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 640px) {
+    table, thead, tbody, tr { display: block; }
+    thead { display: none; }
+    tbody tr {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 10px;
+      padding: 8px 10px;
+    }
+    tbody td {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      border-bottom: none;
+      padding: 4px 0;
+    }
+    tbody td::before {
+      content: attr(data-label);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page-header">
+    <h1>Liszt árfigyelő</h1>
+    <p class="subtitle">Kedvenc malmok pillanatnyi liszt-kínálata egy helyen: árak, ár/kg, szállítási költség, adalékmentesség.</p>
+    <div class="meta-row">
+      <span id="last-updated">Adatok frissítése: betöltés…</span>
+      <span>·</span>
+      <span>Készítette: Udvari István · Adatelemző</span>
+    </div>
+    <div class="disclaimer">
+      Ez egy <strong>nem hivatalos, tájékoztató jellegű</strong> ár-összehasonlító eszköz, amely a malmok nyilvános
+      webshopjaiból gyűjt adatot automatikusan, napi egy alkalommal. Az árak és a készletadatok a gyűjtés
+      időpontjában voltak érvényesek - vásárlás előtt mindig ellenőrizd a malom saját oldalán. Az adalékmentességi
+      és bio jelzések egy része a malom nyilatkozatán, más része tanúsítványon vagy közvetett jelzésen alapul -
+      ahol ez bizonytalan, a tábla külön jelzi.
+    </div>
+    <div class="error-banner" id="error-banner"></div>
+  </header>
+
+  <section id="table-section">
+    <h2>Összehasonlító tábla</h2>
+    <div class="card">
+      <div class="filters">
+        <div class="filter-field">
+          <label for="f-search">Keresés</label>
+          <input type="text" id="f-search" placeholder="pl. tönköly, BL-80…">
+        </div>
+        <div class="filter-field">
+          <label for="f-type">Liszttípus</label>
+          <select id="f-type"><option value="">Mind</option></select>
+        </div>
+        <div class="filter-field">
+          <label for="f-package">Kiszerelés</label>
+          <select id="f-package"><option value="">Mind</option></select>
+        </div>
+        <div class="filter-field">
+          <label for="f-sort">Rendezés</label>
+          <select id="f-sort">
+            <option value="price_per_kg_asc">Ár/kg - olcsótól</option>
+            <option value="price_per_kg_desc">Ár/kg - drágától</option>
+            <option value="mill">Malom szerint</option>
+            <option value="name">Név szerint</option>
+          </select>
+        </div>
+        <div class="filter-field">
+          <span>&nbsp;</span>
+          <div class="checkbox-group">
+            <label><input type="checkbox" id="f-instock"> csak készleten lévő</label>
+            <label><input type="checkbox" id="f-additive-free"> csak adalékmentes / bio</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="checkbox-group" id="mill-filter" style="margin-bottom:12px;"></div>
+
+      <div style="overflow-x:auto;">
+        <table id="product-table">
+          <thead>
+            <tr>
+              <th data-sort="mill">Malom</th>
+              <th data-sort="name">Termék</th>
+              <th class="num" data-sort="package_kg">Kiszerelés</th>
+              <th class="num" data-sort="price_huf">Ár</th>
+              <th class="num sorted" data-sort="price_per_kg">Ár/kg</th>
+              <th>Készlet</th>
+              <th>Adalékmentes</th>
+              <th>Forrás</th>
+            </tr>
+          </thead>
+          <tbody id="product-tbody">
+            <tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:24px;">Adatok betöltése…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="legend" id="table-legend"></div>
+    </div>
+  </section>
+
+  <section id="shipping-section">
+    <h2>Szállítási feltételek és kalkulátor</h2>
+    <div class="card">
+      <div class="shipping-grid" id="shipping-grid"></div>
+
+      <div class="calc-row">
+        <div class="filter-field">
+          <label for="calc-mill">Malom</label>
+          <select id="calc-mill"></select>
+        </div>
+        <div class="filter-field">
+          <label for="calc-kg">Rendelt mennyiség (kg)</label>
+          <input type="number" id="calc-kg" min="0" step="0.5" value="5">
+        </div>
+      </div>
+      <div class="calc-result" id="calc-result"></div>
+    </div>
+  </section>
+
+  <section id="history-section">
+    <h2>Árelőzmény</h2>
+    <div class="card">
+      <div class="filters">
+        <div class="filter-field">
+          <label for="hist-type">Liszttípus a trendhez</label>
+          <select id="hist-type"></select>
+        </div>
+      </div>
+      <div id="history-chart"></div>
+      <div class="legend" id="history-legend"></div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Forrás: a malmok nyilvános webshopjai (a tábla "Forrás" oszlopában malmonként/terméken linkelve). A "viszonteladói forrás" jelölésű sorok nem a malomtól közvetlenül, hanem egy viszonteladó oldaláról származnak.</p>
+    <p>Készítette: Udvari István · Adatelemző</p>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var MILL_COLORS = {
+    "csaladellato": "var(--series-1)",
+    "garat_malom": "var(--series-2)",
+    "csoroszlya_farm": "var(--series-3)",
+    "biom_malom": "var(--series-4)"
+  };
+  var MILL_ORDER = ["csaladellato", "garat_malom", "csoroszlya_farm", "biom_malom"];
+
+  var state = {
+    current: null,
+    history: [], // [{generated_at, products: [...]}]
+    filters: {
+      search: "",
+      type: "",
+      pkg: "",
+      sort: "price_per_kg_asc",
+      inStockOnly: false,
+      additiveFreeOnly: false,
+      mills: new Set(MILL_ORDER)
+    }
+  };
+
+  function fmtHuf(n) {
+    if (n === null || n === undefined) return "—";
+    return new Intl.NumberFormat("hu-HU").format(n) + " Ft";
+  }
+
+  function fmtKg(n) {
+    if (n === null || n === undefined) return "—";
+    return (Number.isInteger(n) ? n : n.toFixed(1)) + " kg";
+  }
+
+  function additiveBadge(product) {
+    var v = product.additive_free;
+    if (v === "yes") return '<span class="badge badge-yes">adalékmentes</span>';
+    if (v === "likely_organic") return '<span class="badge badge-bio">bio (valószínűsíthetően)</span>';
+    if (v === "no") return '<span class="badge badge-out">tartalmaz adalékot</span>';
+    return '<span class="badge badge-unknown">nem ismert</span>';
+  }
+
+  function stockBadge(product) {
+    if (product.in_stock === true) return '<span class="badge badge-yes">raktáron</span>';
+    if (product.in_stock === false) return '<span class="badge badge-out">' + (product.stock_note || "elfogyott") + '</span>';
+    return '<span class="badge badge-unknown">nem ismert</span>';
+  }
+
+  function millDot(millId) {
+    var c = MILL_COLORS[millId] || "var(--text-muted)";
+    return '<span class="mill-dot" style="background:' + c + '"></span>';
+  }
+
+  function populateSelect(select, values, allLabel) {
+    select.innerHTML = "";
+    var optAll = document.createElement("option");
+    optAll.value = "";
+    optAll.textContent = allLabel;
+    select.appendChild(optAll);
+    values.forEach(function (v) {
+      var o = document.createElement("option");
+      o.value = v;
+      o.textContent = v;
+      select.appendChild(o);
+    });
+  }
+
+  function uniqueSorted(arr) {
+    return Array.from(new Set(arr.filter(Boolean))).sort();
+  }
+
+  function applyFiltersAndRender() {
+    if (!state.current) return;
+    var products = state.current.products || [];
+    var f = state.filters;
+
+    var filtered = products.filter(function (p) {
+      if (f.search) {
+        var hay = ((p.product_name || "") + " " + (p.mill || "") + " " + (p.flour_type || "")).toLowerCase();
+        if (hay.indexOf(f.search.toLowerCase()) === -1) return false;
+      }
+      if (f.type && p.flour_type !== f.type) return false;
+      if (f.pkg && String(p.package_kg) !== f.pkg) return false;
+      if (f.inStockOnly && p.in_stock !== true) return false;
+      if (f.additiveFreeOnly && p.additive_free !== "yes" && p.additive_free !== "likely_organic") return false;
+      if (!f.mills.has(p.mill_id)) return false;
+      return true;
+    });
+
+    var bestPerType = {};
+    filtered.forEach(function (p) {
+      if (p.price_per_kg_huf == null) return;
+      var key = p.flour_type || "_";
+      if (bestPerType[key] == null || p.price_per_kg_huf < bestPerType[key]) {
+        bestPerType[key] = p.price_per_kg_huf;
+      }
+    });
+
+    filtered.sort(function (a, b) {
+      switch (f.sort) {
+        case "price_per_kg_desc":
+          return (b.price_per_kg_huf || -1) - (a.price_per_kg_huf || -1);
+        case "mill":
+          return (a.mill || "").localeCompare(b.mill || "", "hu");
+        case "name":
+          return (a.product_name || "").localeCompare(b.product_name || "", "hu");
+        case "price_per_kg_asc":
+        default:
+          var av = a.price_per_kg_huf == null ? Infinity : a.price_per_kg_huf;
+          var bv = b.price_per_kg_huf == null ? Infinity : b.price_per_kg_huf;
+          return av - bv;
+      }
+    });
+
+    var tbody = document.getElementById("product-tbody");
+    if (filtered.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:24px;">Nincs a szűrésnek megfelelő termék.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(function (p) {
+      var isBest = p.price_per_kg_huf != null && p.price_per_kg_huf === bestPerType[p.flour_type || "_"];
+      var resellerNote = p.data_source && p.data_source.indexOf("reseller_fallback") === 0
+        ? '<br><span class="badge badge-reseller">viszonteladói forrás</span>' : "";
+      return "" +
+        '<tr>' +
+        '<td data-label="Malom">' + millDot(p.mill_id) + (p.mill || "") + '</td>' +
+        '<td data-label="Termék">' + (p.product_name || "") + resellerNote + '</td>' +
+        '<td class="num" data-label="Kiszerelés">' + fmtKg(p.package_kg) + '</td>' +
+        '<td class="num" data-label="Ár">' + fmtHuf(p.price_huf) + '</td>' +
+        '<td class="num" data-label="Ár/kg"><span class="price-per-kg' + (isBest ? " best" : "") + '">' + fmtHuf(p.price_per_kg_huf) + (isBest ? " ★" : "") + '</span></td>' +
+        '<td data-label="Készlet">' + stockBadge(p) + '</td>' +
+        '<td data-label="Adalékmentes">' + additiveBadge(p) + '</td>' +
+        '<td data-label="Forrás"><a class="source-link" href="' + (p.source_url || "#") + '" target="_blank" rel="noopener">oldal →</a></td>' +
+        '</tr>';
+    }).join("");
+  }
+
+  function renderMillFilter() {
+    var container = document.getElementById("mill-filter");
+    var mills = state.current.mills || {};
+    container.innerHTML = MILL_ORDER
+      .filter(function (id) { return mills[id]; })
+      .map(function (id) {
+        var name = mills[id].short_name || mills[id].name || id;
+        return '<label><input type="checkbox" data-mill="' + id + '" checked> ' +
+          millDot(id) + name + '</label>';
+      }).join("");
+
+    container.querySelectorAll("input[type=checkbox]").forEach(function (cb) {
+      cb.addEventListener("change", function () {
+        var id = cb.getAttribute("data-mill");
+        if (cb.checked) state.filters.mills.add(id);
+        else state.filters.mills.delete(id);
+        applyFiltersAndRender();
+      });
+    });
+  }
+
+  function renderTableLegend() {
+    var mills = state.current.mills || {};
+    var legend = document.getElementById("table-legend");
+    legend.innerHTML = MILL_ORDER.filter(function (id) { return mills[id]; }).map(function (id) {
+      var name = mills[id].short_name || mills[id].name || id;
+      return '<span><span class="dot" style="background:' + MILL_COLORS[id] + '"></span>' + name + '</span>';
+    }).join("");
+  }
+
+  function renderShipping() {
+    var mills = state.current.mills || {};
+    var grid = document.getElementById("shipping-grid");
+    grid.innerHTML = MILL_ORDER.filter(function (id) { return mills[id]; }).map(function (id) {
+      var m = mills[id];
+      var s = m.shipping || {};
+      var lines = [];
+      if (s.type === "flat" && s.flat_fee_huf != null) {
+        lines.push("Egységes díj: " + fmtHuf(s.flat_fee_huf) + (s.flat_fee_note ? " (" + s.flat_fee_note + ")" : ""));
+      } else if (s.type === "tiered_by_weight" && s.tiers_huf) {
+        lines.push("Súly szerint sávos díj (" + fmtHuf(s.tiers_huf[0].fee_huf) + "-tól)");
+      } else if (s.type === "tiered_by_weight_carrier") {
+        lines.push(s.tiers_note || "Súly és fuvarozó szerint változó díj");
+      } else {
+        lines.push("Szállítási díj: nem ismert / ellenőrzés alatt");
+      }
+      if (s.free_shipping_threshold_huf) {
+        lines.push("Ingyenes szállítás " + fmtHuf(s.free_shipping_threshold_huf) + " felett");
+      }
+      if (s.personal_pickup) {
+        lines.push("Személyes átvétel: " + (s.personal_pickup_note || "elérhető"));
+      } else if (s.personal_pickup === false) {
+        lines.push("Személyes átvétel nem elérhető");
+      }
+      return '<div class="shipping-card">' +
+        '<h3>' + millDot(id) + (m.short_name || m.name) + '</h3>' +
+        lines.map(function (l) { return "<p>" + l + "</p>"; }).join("") +
+        (m.website ? '<p><a class="source-link" href="' + m.website + '" target="_blank" rel="noopener">malom oldala →</a></p>' : "") +
+        '</div>';
+    }).join("");
+  }
+
+  function estimateShipping(mill, kg) {
+    var s = mill.shipping || {};
+    if (s.type === "flat" && s.flat_fee_huf != null) {
+      return { fee: s.flat_fee_huf, note: s.flat_fee_note || "" };
+    }
+    if (s.type === "tiered_by_weight" && Array.isArray(s.tiers_huf)) {
+      for (var i = 0; i < s.tiers_huf.length; i++) {
+        if (kg <= s.tiers_huf[i].max_kg) {
+          return { fee: s.tiers_huf[i].fee_huf, note: "" };
+        }
+      }
+      var last = s.tiers_huf[s.tiers_huf.length - 1];
+      return { fee: last.fee_huf, note: "a legnagyobb ismert súlysávon felül, pontos díj a malomnál ellenőrizendő" };
+    }
+    return { fee: null, note: s.tiers_note || "nem ismert, ellenőrizendő a malom oldalán" };
+  }
+
+  function renderShippingCalculator() {
+    var mills = state.current.mills || {};
+    var select = document.getElementById("calc-mill");
+    select.innerHTML = MILL_ORDER.filter(function (id) { return mills[id]; }).map(function (id) {
+      return '<option value="' + id + '">' + (mills[id].short_name || mills[id].name) + '</option>';
+    }).join("");
+
+    function update() {
+      var millId = select.value;
+      var mill = mills[millId];
+      var kg = parseFloat(document.getElementById("calc-kg").value) || 0;
+      var result = document.getElementById("calc-result");
+      if (!mill) { result.textContent = ""; return; }
+
+      var est = estimateShipping(mill, kg);
+      var pickupLine = mill.shipping && mill.shipping.personal_pickup
+        ? " Alternatíva: személyes átvétel (" + (mill.shipping.personal_pickup_note || "") + ")."
+        : "";
+      if (est.fee == null) {
+        result.innerHTML = "A szállítási díj erre a malomra jelenleg nem ismert automatikusan - " +
+          "ellenőrizd a malom oldalán." + pickupLine;
+      } else {
+        result.innerHTML = kg + " kg rendelés esetén becsült szállítási díj: <strong>" + fmtHuf(est.fee) + "</strong>" +
+          (est.note ? " (" + est.note + ")" : "") + "." + pickupLine;
+      }
+    }
+
+    select.addEventListener("change", update);
+    document.getElementById("calc-kg").addEventListener("input", update);
+    update();
+  }
+
+  // --- Árelőzmény (egyszerű, saját SVG line chart, külső könyvtár nélkül) ---
+
+  function buildHistorySeries(flourType) {
+    // visszaadja: { millId: [{t: Date, v: price_per_kg}, ...] }
+    var series = {};
+    state.history.forEach(function (entry) {
+      var t = new Date(entry.generated_at);
+      (entry.products || []).forEach(function (p) {
+        if (flourType && p.flour_type !== flourType) return;
+        if (p.price_per_kg_huf == null) return;
+        if (!series[p.mill_id]) series[p.mill_id] = [];
+        series[p.mill_id].push({ t: t, v: p.price_per_kg_huf });
+      });
+    });
+    // malmonként: napi átlag ár/kg (ha több termék is illeszkedik a típusra)
+    Object.keys(series).forEach(function (millId) {
+      var byDay = {};
+      series[millId].forEach(function (pt) {
+        var day = pt.t.toISOString().slice(0, 10);
+        if (!byDay[day]) byDay[day] = [];
+        byDay[day].push(pt.v);
+      });
+      series[millId] = Object.keys(byDay).sort().map(function (day) {
+        var vals = byDay[day];
+        return { t: new Date(day), v: vals.reduce(function (a, b) { return a + b; }, 0) / vals.length };
+      });
+    });
+    return series;
+  }
+
+  function renderHistoryChart() {
+    var typeSelect = document.getElementById("hist-type");
+    var flourType = typeSelect.value;
+    var series = buildHistorySeries(flourType);
+    var container = document.getElementById("history-chart");
+    var legend = document.getElementById("history-legend");
+
+    var millIds = MILL_ORDER.filter(function (id) { return series[id] && series[id].length > 0; });
+    var totalPoints = millIds.reduce(function (sum, id) { return sum + series[id].length; }, 0);
+
+    if (totalPoints < 2) {
+      container.innerHTML = '<div class="chart-empty">Még nincs elég historikus adat a trendhez - ez a napi automatikus futások után, néhány nap adatgyűjtést követően jelenik meg.</div>';
+      legend.innerHTML = "";
+      return;
+    }
+
+    var W = Math.max(container.clientWidth || 900, 300), H = 260, PAD = { top: 16, right: 16, bottom: 28, left: 52 };
+    var allPoints = millIds.reduce(function (acc, id) { return acc.concat(series[id]); }, []);
+    var minT = Math.min.apply(null, allPoints.map(function (p) { return p.t.getTime(); }));
+    var maxT = Math.max.apply(null, allPoints.map(function (p) { return p.t.getTime(); }));
+    var minV = Math.min.apply(null, allPoints.map(function (p) { return p.v; }));
+    var maxV = Math.max.apply(null, allPoints.map(function (p) { return p.v; }));
+    if (minT === maxT) maxT = minT + 1;
+    if (minV === maxV) { minV -= 1; maxV += 1; }
+    var vPad = (maxV - minV) * 0.1;
+    minV -= vPad; maxV += vPad;
+
+    function x(t) { return PAD.left + (t.getTime() - minT) / (maxT - minT) * (W - PAD.left - PAD.right); }
+    function y(v) { return PAD.top + (1 - (v - minV) / (maxV - minV)) * (H - PAD.top - PAD.bottom); }
+
+    var gridLines = [];
+    var steps = 4;
+    for (var i = 0; i <= steps; i++) {
+      var v = minV + (maxV - minV) * i / steps;
+      var gy = y(v);
+      gridLines.push('<line x1="' + PAD.left + '" x2="' + (W - PAD.right) + '" y1="' + gy + '" y2="' + gy + '" stroke="var(--gridline)" stroke-width="1"/>');
+      gridLines.push('<text x="' + (PAD.left - 8) + '" y="' + (gy + 4) + '" font-size="11" fill="var(--text-muted)" text-anchor="end">' + Math.round(v) + '</text>');
+    }
+
+    var paths = millIds.map(function (id) {
+      var pts = series[id];
+      var d = pts.map(function (p, i) { return (i === 0 ? "M" : "L") + x(p.t).toFixed(1) + "," + y(p.v).toFixed(1); }).join(" ");
+      var color = MILL_COLORS[id];
+      var dots = pts.map(function (p) {
+        return '<circle cx="' + x(p.t).toFixed(1) + '" cy="' + y(p.v).toFixed(1) + '" r="3" fill="' + color + '"><title>' +
+          (state.current.mills[id].short_name || id) + " · " + p.t.toLocaleDateString("hu-HU") + " · " + Math.round(p.v) + " Ft/kg</title></circle>";
+      }).join("");
+      return '<path d="' + d + '" fill="none" stroke="' + color + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' + dots;
+    }).join("");
+
+    container.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="' + H + '" role="img" aria-label="Ár/kg trend malmonként">' +
+      gridLines.join("") + paths + '</svg>';
+
+    legend.innerHTML = millIds.map(function (id) {
+      return '<span><span class="dot" style="background:' + MILL_COLORS[id] + '"></span>' + (state.current.mills[id].short_name || id) + '</span>';
+    }).join("");
+  }
+
+  // --- betöltés ---
+
+  function setupFilterListeners() {
+    document.getElementById("f-search").addEventListener("input", function (e) {
+      state.filters.search = e.target.value;
+      applyFiltersAndRender();
+    });
+    document.getElementById("f-type").addEventListener("change", function (e) {
+      state.filters.type = e.target.value;
+      applyFiltersAndRender();
+    });
+    document.getElementById("f-package").addEventListener("change", function (e) {
+      state.filters.pkg = e.target.value;
+      applyFiltersAndRender();
+    });
+    document.getElementById("f-sort").addEventListener("change", function (e) {
+      state.filters.sort = e.target.value;
+      applyFiltersAndRender();
+    });
+    document.getElementById("f-instock").addEventListener("change", function (e) {
+      state.filters.inStockOnly = e.target.checked;
+      applyFiltersAndRender();
+    });
+    document.getElementById("f-additive-free").addEventListener("change", function (e) {
+      state.filters.additiveFreeOnly = e.target.checked;
+      applyFiltersAndRender();
+    });
+    document.querySelectorAll("#product-table thead th[data-sort]").forEach(function (th) {
+      th.addEventListener("click", function () {
+        var key = th.getAttribute("data-sort");
+        var map = { price_per_kg: "price_per_kg_asc", mill: "mill", name: "name" };
+        if (key === "price_per_kg") {
+          state.filters.sort = state.filters.sort === "price_per_kg_asc" ? "price_per_kg_desc" : "price_per_kg_asc";
+        } else if (map[key]) {
+          state.filters.sort = map[key];
+        }
+        document.querySelectorAll("#product-table thead th").forEach(function (h) { h.classList.remove("sorted"); });
+        th.classList.add("sorted");
+        applyFiltersAndRender();
+      });
+    });
+    document.getElementById("hist-type").addEventListener("change", renderHistoryChart);
+  }
+
+  function renderLastUpdated() {
+    var el = document.getElementById("last-updated");
+    if (!state.current.generated_at) {
+      el.textContent = "Adatok: még nem futott le az első gyűjtés.";
+      return;
+    }
+    var d = new Date(state.current.generated_at);
+    el.textContent = "Adatok frissítve: " + d.toLocaleString("hu-HU");
+  }
+
+  function renderErrorBanner() {
+    var errors = state.current.errors || {};
+    var keys = Object.keys(errors);
+    var banner = document.getElementById("error-banner");
+    if (keys.length === 0) {
+      banner.classList.remove("visible");
+      return;
+    }
+    var mills = state.current.mills || {};
+    banner.innerHTML = "Néhány malomnál nem sikerült frissíteni az adatot a legutóbbi futáskor: " +
+      keys.map(function (id) { return (mills[id] ? (mills[id].short_name || mills[id].name) : id); }).join(", ") +
+      ". A táblában ezeknél a régebbi adat látszik, amíg a következő sikeres futás nem frissíti.";
+    banner.classList.add("visible");
+  }
+
+  function init(current, historyEntries) {
+    state.current = current;
+    state.history = historyEntries;
+
+    renderLastUpdated();
+    renderErrorBanner();
+    renderMillFilter();
+    renderTableLegend();
+    renderShipping();
+    renderShippingCalculator();
+
+    var products = current.products || [];
+    populateSelect(document.getElementById("f-type"), uniqueSorted(products.map(function (p) { return p.flour_type; })), "Mind");
+    populateSelect(document.getElementById("f-package"), uniqueSorted(products.map(function (p) { return p.package_kg; })).map(String), "Mind");
+    populateSelect(document.getElementById("hist-type"), uniqueSorted(products.map(function (p) { return p.flour_type; })), "Összes típus (átlag)");
+
+    setupFilterListeners();
+    applyFiltersAndRender();
+    renderHistoryChart();
+  }
+
+  function parseJsonl(text) {
+    return text.split("\n").filter(function (l) { return l.trim().length > 0; }).map(function (l) {
+      try { return JSON.parse(l); } catch (e) { return null; }
+    }).filter(Boolean);
+  }
+
+  Promise.all([
+    fetch("data/current.json").then(function (r) { return r.json(); }).catch(function () {
+      return { generated_at: null, mills: {}, products: [], errors: {} };
+    }),
+    fetch("data/history.jsonl").then(function (r) { return r.text(); }).then(parseJsonl).catch(function () { return []; })
+  ]).then(function (results) {
+    init(results[0], results[1]);
+  });
+})();
+</script>
+</body>
+</html>

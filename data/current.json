@@ -1,0 +1,7 @@
+{
+  "generated_at": null,
+  "mills": {},
+  "products": [],
+  "errors": {},
+  "note": "Ez a fájl a GitHub Actions workflow első futtatásakor töltődik fel valódi adattal (lásd .github/workflows/update-data.yml). Amíg ez nem futott le, a frontend üres/placeholder állapotot mutat."
+}

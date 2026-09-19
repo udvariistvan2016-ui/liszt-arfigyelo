@@ -1,0 +1,89 @@
+{
+  "csaladellato": {
+    "name": "Kecskeméti Családellátó",
+    "short_name": "Családellátó",
+    "website": "https://www.csaladellato.hu",
+    "shipping": {
+      "type": "flat",
+      "flat_fee_huf": 2500,
+      "flat_fee_note": "GLS házhozszállítás vagy csomagpont, max. 25 kg-ig egységesen",
+      "free_shipping_threshold_huf": null,
+      "personal_pickup": false,
+      "personal_pickup_note": null,
+      "source_url": "https://www.csaladellato.hu/szallitasi-informaciok",
+      "checked_at": "2026-09-19",
+      "confidence": "medium_needs_reverify"
+    },
+    "additive_free_default": "unknown",
+    "organic_certified": false,
+    "organic_cert_body": null,
+    "notes": "Nem bio-tanúsítású termékvonal. Adalékmentesség build közben tovább vizsgálandó (egyedi termékoldal, csomagolás, vagy közvetlen megkeresés)."
+  },
+  "csoroszlya_farm": {
+    "name": "Csoroszlya Farm",
+    "short_name": "Csoroszlya Farm",
+    "website": "https://csoroszlyafarm.hu",
+    "shipping": {
+      "type": "tiered_by_weight",
+      "tiers_huf": [
+        {"max_kg": 9, "fee_huf": 2100},
+        {"max_kg": 19, "fee_huf": 2500},
+        {"max_kg": 29, "fee_huf": 2850},
+        {"max_kg": 34, "fee_huf": 3250},
+        {"max_kg": 38, "fee_huf": 3800},
+        {"max_kg": 58, "fee_huf": 5150},
+        {"max_kg": 74, "fee_huf": 6250},
+        {"max_kg": 100, "fee_huf": 9150}
+      ],
+      "cod_surcharge_huf": 520,
+      "free_shipping_threshold_huf": null,
+      "personal_pickup": true,
+      "personal_pickup_note": "Személyes átvétel a farmon ingyenes: 2066 Szár, József Attila utca 066, hétfő és csütörtök 9-16 óra, előzetes telefonos egyeztetéssel (06 20 286 2233)",
+      "source_url": "https://csoroszlyafarm.hu/pages/szallitas-es-fizetes",
+      "checked_at": "2026-09-19",
+      "confidence": "high"
+    },
+    "additive_free_default": "likely_organic",
+    "organic_certified": true,
+    "organic_cert_body": null,
+    "notes": "Bio gazdaság és malom, saját termesztésű gabonából, kőmalmi őrlés. Kifejezett 'adalékmentes' nyilatkozat nem található az oldalon, a bio tanúsítvány erős közvetett jelzés."
+  },
+  "garat_malom": {
+    "name": "Garat Malom",
+    "short_name": "Garat Malom",
+    "website": "https://garatmalom.hu",
+    "shipping": {
+      "type": "tiered_by_weight_carrier",
+      "tiers_note": "Kb. 9 kg-ig 1500-3000 Ft, 24 kg-ig 1500-6300 Ft, fuvarozó (GLS/Express One/Posta) szerint változik. Build közben pontosítandó a tényleges terméklap/kosár alapján.",
+      "free_shipping_threshold_huf": null,
+      "personal_pickup": false,
+      "personal_pickup_note": null,
+      "source_url": "https://garatmalom.hu/fizetes-szallitasi-infok/",
+      "checked_at": "2026-09-19",
+      "confidence": "medium_needs_reverify"
+    },
+    "additive_free_default": "yes",
+    "organic_certified": false,
+    "organic_cert_body": null,
+    "notes": "A terméklapokon kifejezetten szerepel: 'Adalékanyag-mentes, glutént tartalmaz.' A scraper ezt termékenként automatikusan kinyeri, ez a mezőérték csak alapértelmezés."
+  },
+  "biom_malom": {
+    "name": "Biom Malom Bóly",
+    "short_name": "Biom Malom",
+    "website": "https://www.biomliszt.hu",
+    "shipping": {
+      "type": "unknown",
+      "tiers_note": "A saját oldal JS-renderelt, szállítási feltételek build közben derítendők ki (headless böngészővel vagy közvetlen megkereséssel). Ha kovaszshop.hu fallback-ra kerül sor, az ottani szállítási feltételek NEM a Biom közvetlen feltételei, ezt a felületen jelölni kell.",
+      "free_shipping_threshold_huf": null,
+      "personal_pickup": null,
+      "personal_pickup_note": null,
+      "source_url": "https://www.biomliszt.hu",
+      "checked_at": "2026-09-19",
+      "confidence": "low_unverified"
+    },
+    "additive_free_default": "likely_organic",
+    "organic_certified": true,
+    "organic_cert_body": "Bio Garancia Magyarország, HU-ÖKO-02",
+    "notes": "Kőmalmi, saját termesztésű bio búzából. Kifejezett 'adalékmentes' nyilatkozat egyelőre nem található, a bio tanúsítvány közvetett jelzés. Fallback forrás (csak másodlagos): kovaszshop.hu (Shoprenter)."
+  }
+}
