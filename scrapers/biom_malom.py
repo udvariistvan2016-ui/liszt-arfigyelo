@@ -98,6 +98,7 @@ def try_direct() -> List[dict]:
                     if price_huf is None:
                         continue
                     name_line = text.splitlines()[0].strip() if text.splitlines() else "Biom liszt"
+                    technical_specs = common.extract_technical_specs(text)
 
                     products.append(
                         common.make_product(
@@ -115,6 +116,7 @@ def try_direct() -> List[dict]:
                             organic_certified=True,
                             organic_cert_body="Bio Garancia Magyarország, HU-ÖKO-02",
                             data_source="direct",
+                            technical_specs=technical_specs,
                         )
                     )
 
@@ -165,6 +167,8 @@ def try_fallback_kovaszshop() -> List[dict]:
             elif "raktáron" in card_text or "raktaron" in card_text or "készleten" in card_text:
                 in_stock = True
 
+            technical_specs = common.extract_technical_specs(card_text)
+
             products.append(
                 common.make_product(
                     mill_id=MILL_ID,
@@ -181,6 +185,7 @@ def try_fallback_kovaszshop() -> List[dict]:
                     organic_certified=True,
                     organic_cert_body="Bio Garancia Magyarország, HU-ÖKO-02",
                     data_source="reseller_fallback_kovaszshop",
+                    technical_specs=technical_specs,
                 )
             )
 

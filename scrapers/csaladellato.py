@@ -116,6 +116,9 @@ def parse_product_page(url: str, html_text: str) -> Optional[dict]:
     elif any(p.search(full_text) for p in IN_STOCK_PATTERNS):
         in_stock = True
 
+    # a regex-minták re.IGNORECASE-szel dolgoznak, a kisbetűs full_text is jó nekik
+    technical_specs = common.extract_technical_specs(full_text)
+
     return common.make_product(
         mill_id=MILL_ID,
         mill_name=MILL_NAME,
@@ -131,6 +134,7 @@ def parse_product_page(url: str, html_text: str) -> Optional[dict]:
         additive_free="unknown",
         additive_free_source="mill_meta_default",
         organic_certified=False,
+        technical_specs=technical_specs,
     )
 
 

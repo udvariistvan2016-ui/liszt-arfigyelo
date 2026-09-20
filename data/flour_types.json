@@ -1,0 +1,200 @@
+{
+  "_comment": "Kézzel karbantartott, oktató jellegű adatfájl a liszt-fajtákról és a magyar liszt-jelölés rendszeréről. EZ NEM a napi scraping kimenete - a data/current.json-tól függetlenül, nem naponta frissül. A benne szereplő fehérje/sikér/W-érték TARTOMÁNYOK általános, tájékoztató jellegű szakmai irányértékek (nem egy adott malom egy adott tételének mért adata) - egy konkrét termék tényleges, mért értékét (ha a malom közzéteszi) a technikai összehasonlító tábla mutatja, a data/current.json-ból, amit a napi scraping tölt fel.",
+  "last_reviewed": "2026-09-20",
+  "sources": [
+    "https://lipotipekseg.hu/tudastar/lisztjelolesek-bl55-bl80-rl60-stb",
+    "https://garatmalom.hu/buza-kisokos/",
+    "https://pizzaalkimia.hu/liszt-w-ertek-azaz-liszterosseg/",
+    "https://pizzaalkimia.hu/liszt-feherjetartalom/",
+    "https://www.kovaszshop.hu/alveograf-es-lisztvizsgalat",
+    "https://egy.hu/gasztronomia/liszt-kisokos-mit-jelentenek-a-kulonbozo-bl-szamozasu-lisztek-118064",
+    "https://www.boldogbrios.hu/kislexikon/buzaliszt/"
+  ],
+
+  "coding_system": {
+    "title": "Hogyan épül fel a magyar liszt-jelölés?",
+    "description": "A hazai lisztek jelölése betű(k) + szám formátumú, pl. \"BL-80\". A betű az alapanyagot és az őrlés jellegét mutatja, a szám pedig a hamutartalmat (a lisztben maradt ásványianyag-tartalmat, ezrelékben) - minél nagyobb a szám, annál nagyobb arányban került a lisztbe a gabonaszem korpás, külső rétegeiből. Ez NEM hibát vagy rosszabb minőséget jelez, hanem azt, hogy a liszt mennyire \"teljes\" (mennyi rost, ásványianyag maradt benne a finomítás után).",
+    "letters": [
+      {"code": "B", "meaning": "búza"},
+      {"code": "R", "meaning": "rozs"},
+      {"code": "L", "meaning": "liszt"},
+      {"code": "TK / T", "meaning": "teljes kiőrlésű (a teljes gabonaszemet őrlik meg, korpástól, csírástól - nincs hamutartalom szerinti finomítás)"},
+      {"code": "BFF / FF", "meaning": "finomliszt / extra finom (a legkisebb hamutartalmú, legvilágosabb liszt)"}
+    ]
+  },
+
+  "protein_guide": {
+    "title": "Miért számít a fehérjetartalom?",
+    "description": "A lisztben lévő fehérjék (elsősorban a gliadin és glutenin) alkotják vízzel dagasztva a sikért (glutént) - ez adja a tészta rugalmasságát, gázmegtartó képességét, ezért a kelt tészták (kenyér, pizza) tartásáért felel. Minél magasabb és minél jobb minőségű a fehérjetartalom, a tészta annál jobban bírja a hosszabb dagasztást és a hosszabb, lassabb kelesztést (pl. kovászos kenyér). Alacsonyabb fehérjetartalmú liszt omlósabb, puhább tésztákhoz (piskóta, omlós tészta) illik jobban.",
+    "typical_ranges_percent": [
+      {"label": "Alacsony (süteményliszt)", "min": 8, "max": 10},
+      {"label": "Közepes (általános, BL-55/BL-80)", "min": 10, "max": 12.5},
+      {"label": "Magas (kenyérliszt, teljes kiőrlésű, ősgabonák)", "min": 12.5, "max": 15},
+      {"label": "Nagyon magas (speciális, erősített lisztek)", "min": 15, "max": 20}
+    ],
+    "caveat": "A csomagoláson feltüntetett fehérjetartalom gyakran a 100 g termékre vetített, tápértéktáblázatból származó adat, ami termésévenként és tételenként is ingadozhat - ezért csak tájékoztató jellegű."
+  },
+
+  "gluten_guide": {
+    "title": "Mi a sikértartalom, és miben más, mint a fehérjetartalom?",
+    "description": "A nedves sikértartalom (gluteo-index vizsgálattal mérve) azt mutatja, ténylegesen mennyi és milyen minőségű sikérhálót képes alkotni a liszt fehérjéje vízzel keverve. A fehérjetartalom és a sikértartalom együtt jár, de nem ugyanaz: két azonos fehérjetartalmú liszt sikérminősége (rugalmassága, nyújthatósága) eltérő lehet a búzafajtától és az őrléstől függően.",
+    "typical_ranges_percent": [
+      {"label": "Gyenge", "min": 20, "max": 26},
+      {"label": "Közepes", "min": 26, "max": 30},
+      {"label": "Erős (kenyérliszt)", "min": 30, "max": 36},
+      {"label": "Nagyon erős", "min": 36, "max": 42}
+    ]
+  },
+
+  "w_value_guide": {
+    "title": "Mi a W-érték (sütőipari érték / liszterősség)?",
+    "description": "Az alveográfos vizsgálattal mért W-érték azt fejezi ki, mennyi energia szükséges a tészta \"buborékjának\" felfújásához, tágításához - vagyis a tészta stabilitását és nyújthatóságát jellemzi. NEM azonos a fehérjetartalommal és nem a lisztfinomságot jelzi, de szorosan összefügg a sikér mennyiségével és minőségével. Minél nagyobb a W-érték, annál tovább bírja a tészta az érlelést (hosszú kelesztés, kovászolás) rogyás nélkül.",
+    "ranges": [
+      {"label": "Gyenge", "w_min": 0, "w_max": 200, "use": "Rövid (2-6 órás) direkt tészták, piskóta, omlós tészta, palacsinta"},
+      {"label": "Közepes", "w_min": 200, "w_max": 300, "use": "Mindennapi kenyér, pizza, direkt vagy röviden érlelt tészták"},
+      {"label": "Erős", "w_min": 300, "w_max": 400, "use": "Hosszan (12-72 órás) érlelt, indirekt tészták, kovászos kenyér, élesztős tészták hosszú kelesztéssel"},
+      {"label": "Nagyon erős", "w_min": 400, "w_max": 999, "use": "Elsősorban gyenge lisztek erősítésére keverve, ritkán önmagában használt (túl \"kemény\" tésztát ad)"}
+    ]
+  },
+
+  "grain_types": [
+    {
+      "id": "buza",
+      "name": "Búza (Triticum aestivum)",
+      "category": "gabona",
+      "description": "A hazai lisztek túlnyomó többségének alapanyaga. A BL-jelölésű lisztek (BL-55, BL-80, BL-112, BL-220 stb.) mind ebből készülnek, a szám a hamutartalom (őrlési finomság) szerint különbözteti meg őket - lásd a \"bl_codes\" listát lent.",
+      "typical_protein_percent": {"min": 9, "max": 14},
+      "gluten_free": false,
+      "notes": "A legváltozatosabb kínálat: a legfinomabb süteménylisztektől a legrostosabb, teljes kiőrlésű kenyérlisztekig."
+    },
+    {
+      "id": "teljes_kiorlesu",
+      "name": "Teljes kiőrlésű (búza)",
+      "category": "gabona",
+      "description": "A teljes gabonaszemet őrlik meg, a korpával és a csírával együtt - nincs finomítás/szitálás hamutartalom szerint. A legmagasabb rost- és ásványianyag-tartalmú búzaliszt, jellemzően BL-220 vagy TBL/TK jelöléssel is találkozni lehet ugyanerre.",
+      "typical_protein_percent": {"min": 12, "max": 14},
+      "gluten_free": false,
+      "notes": "Sötétebb színű, rusztikusabb, sűrűbb bélzetű kenyeret ad, mint a finomabb lisztek. Gyakran keverik BL-55/BL-80 liszttel a könnyebb kelés érdekében."
+    },
+    {
+      "id": "tonkoly",
+      "name": "Tönköly (Triticum spelta)",
+      "category": "ősgabona",
+      "description": "A búza egyik régi, páncélos szemű rokon fajtája. Sikérje jelen van, de gyengébb szerkezetű és vízoldékonyabb, mint a modern búzáé, ezért óvatosabb dagasztást és rövidebb kelesztést kíván. Sokan könnyebben emészthetőnek tartják, jellegzetes, diósabb ízvilággal.",
+      "typical_protein_percent": {"min": 11, "max": 14},
+      "gluten_free": false,
+      "notes": "A fehér (finomított) és a teljes kiőrlésű tönkölyliszt fehérjetartalma is eltérhet - a teljes kiőrlésű jellemzően a tartomány felső részén van."
+    },
+    {
+      "id": "rozs",
+      "name": "Rozs (Secale cereale)",
+      "category": "gabona",
+      "description": "A rozsban lévő fehérjék gyengébb, kevésbé rugalmas sikérhálót alkotnak, mint a búzáé, ezért önmagában nehezebben megy magasra a tészta - viszont a rozs természetes tejsavbaktérium-flórája miatt kiválóan alkalmas kovászoláshoz, jellegzetes, savanykás ízű, sűrű bélzetű kenyeret adva. Jelölése RL (pl. RL-60, RL-90, RL-125).",
+      "typical_protein_percent": {"min": 8, "max": 11},
+      "gluten_free": false,
+      "notes": "A rozskenyereket gyakran búzaliszttel keverve sütik, hogy a tészta jobban tartsa a formáját."
+    },
+    {
+      "id": "kiralybuza",
+      "name": "Királybúza",
+      "category": "fajhibrid",
+      "description": "Viszonylag új búza-fajhibrid, amely a tönköly életrevalóságát és robusztusságát ötvözi a tönkebúza keménységével és kiváló sikérszerkezetével. A hagyományos búzalisztnél jellemzően magasabb és kedvezőbb aminosav-összetételű fehérjét tartalmaz, természetes karotin-festékanyaga miatt sárgásabb színű, és több vizet képes felvenni, mint a megszokott lisztek. Jellegzetes, nem \"ízetlen\" ízvilággal rendelkezik.",
+      "typical_protein_percent": {"min": 12, "max": 16},
+      "gluten_free": false,
+      "notes": "Több hazai malom (pl. Garat Malom KBL-100/KBL-200, Kecskeméti Családellátó KRBL-100) is kínálja, finomtól a teljes kiőrlésű változatig. Kenyérhez, pizzához, tésztákhoz és süteményekhez egyaránt ajánlott."
+    },
+    {
+      "id": "kamut",
+      "name": "Kamut (khorászáni búza, Triticum turgidum ssp. turanicum)",
+      "category": "ősgabona",
+      "description": "Ősi, nagyszemű búzafajta, jellemzően a modern búzánál magasabb fehérje- és ásványianyag-tartalommal (pl. szelén). Robusztus sikérszerkezete van, diós, vajas ízvilággal. Kenyérhez és tésztához egyaránt kedvelt.",
+      "typical_protein_percent": {"min": 14, "max": 17},
+      "gluten_free": false,
+      "notes": "Sikérje jelen van - búzaallergiásoknak és lisztérzékenyeknek NEM alkalmas, a köznyelvi \"jobban tolerálható\" hírnév ellenére sem."
+    },
+    {
+      "id": "alakor",
+      "name": "Alakor / egyszemű búza (Triticum monococcum)",
+      "category": "ősgabona",
+      "description": "Az egyik legrégebb óta termesztett búzafajta, alacsony hozamú, ezért ritkábban és drágábban kapható. Sikérje a modern búzáénál gyengébb, más fehérjeösszetételű - ez indokolja a köznyelvben elterjedt \"könnyebben emészthető\" jelzőt, bár ez nem jelenti, hogy gluténmentes lenne.",
+      "typical_protein_percent": {"min": 13, "max": 16},
+      "gluten_free": false,
+      "notes": "Gyengébb sikérháló miatt óvatosabb dagasztást, gyakran búzaliszttel való keverést igényel a jó tésztaszerkezethez."
+    },
+    {
+      "id": "borso",
+      "name": "Borsóliszt (sárgaborsó)",
+      "category": "hüvelyes (nem gabona)",
+      "description": "Hüvelyes növényből (nem gabonaféléből) készül, ezért NEM tartalmaz glutént - önmagában hagyományos, kelt kenyér nem süthető belőle. Kiemelkedően magas fehérjetartalmú, gabonalisztekkel keverve fehérjedúsításra, vagy gluténmentes sütemények alapanyagaként használják.",
+      "typical_protein_percent": {"min": 20, "max": 25},
+      "gluten_free": true,
+      "notes": "Ha valaki tudatosan keresi az adalékmentes, magas fehérjetartalmú alapanyagot, ez jó kiegészítő - de a fenti gabonalisztekkel nem közvetlenül összehasonlítható a teljesen eltérő sikértartalom (0%) miatt."
+    }
+  ],
+
+  "bl_codes": [
+    {
+      "code": "BL-55",
+      "grain": "búza",
+      "ash_content_percent": 0.55,
+      "description": "A legfinomabb, legvilágosabb, hagyományos \"finomliszt\". Kevés korpa, alacsony rosttartalom.",
+      "typical_protein_percent": {"min": 9, "max": 11},
+      "typical_w_value": {"min": 150, "max": 230},
+      "typical_use": "Sütemények, piskóta, palacsinta, rántás, omlós tészták"
+    },
+    {
+      "code": "BL-80",
+      "grain": "búza",
+      "ash_content_percent": 0.80,
+      "description": "A legelterjedtebb hazai \"kenyérliszt\", mindennapi pékáruk alapanyaga.",
+      "typical_protein_percent": {"min": 10.5, "max": 12.5},
+      "typical_w_value": {"min": 200, "max": 280},
+      "typical_use": "Mindennapi kenyér, kalács, pizza, kifli"
+    },
+    {
+      "code": "BL-112",
+      "grain": "búza",
+      "ash_content_percent": 1.12,
+      "description": "Több korpát tartalmaz, mint a BL-80, rusztikusabb, rostosabb kenyerekhez.",
+      "typical_protein_percent": {"min": 11.5, "max": 13.5},
+      "typical_w_value": {"min": 220, "max": 300},
+      "typical_use": "Rusztikus, rostosabb kenyerek, félbarna pékáruk"
+    },
+    {
+      "code": "BL-220 / teljes kiőrlésű",
+      "grain": "búza",
+      "ash_content_percent": 2.2,
+      "description": "A legmagasabb hamutartalmú búzaliszt-kategória, gyakorlatilag a teljes kiőrlésű liszttel egy szintre esik.",
+      "typical_protein_percent": {"min": 12, "max": 14},
+      "typical_w_value": {"min": 180, "max": 260},
+      "typical_use": "Sötét, rostos, teljes kiőrlésű kenyerek"
+    },
+    {
+      "code": "RL-60",
+      "grain": "rozs",
+      "ash_content_percent": 0.60,
+      "description": "A legvilágosabb rozsliszt-típus.",
+      "typical_protein_percent": {"min": 7, "max": 9},
+      "typical_w_value": null,
+      "typical_use": "Búzaliszttel keverve, könnyebb rozsos pékáruk"
+    },
+    {
+      "code": "RL-90",
+      "grain": "rozs",
+      "ash_content_percent": 0.90,
+      "description": "Közepes hamutartalmú rozsliszt.",
+      "typical_protein_percent": {"min": 7.5, "max": 9.5},
+      "typical_w_value": null,
+      "typical_use": "Kovászos, rozsos kenyerek"
+    },
+    {
+      "code": "RL-125",
+      "grain": "rozs",
+      "ash_content_percent": 1.25,
+      "description": "Sötét, magas hamutartalmú rozsliszt.",
+      "typical_protein_percent": {"min": 8, "max": 11},
+      "typical_w_value": null,
+      "typical_use": "Sötét, tömör rozskenyerek, kovászfrissítés"
+    }
+  ]
+}

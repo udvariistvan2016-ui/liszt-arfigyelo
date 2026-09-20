@@ -22,9 +22,33 @@ data/mill_meta.json   --  kézzel karbantartott: szállítási feltételek, adal
 data/current.json     --  a legutóbbi futás eredménye (ezt tölti be a frontend)
 data/history.jsonl    --  append-only napló, MINDEN futás egy sor, lejárat nélkül
                            (hosszútávú ár-trendekhez)
+data/flour_types.json --  kézzel karbantartott, oktató jellegű adatfájl a liszt-fajtákról
+                           és a BL/RL kódokról - EZ NEM a napi scraping kimenete, nem
+                           frissül automatikusan (ld. lent, "Liszt fajták kisokos")
         ↓
 index.html             --  egyfájlos frontend, ezt látja a látogató GitHub Pages-en
 ```
+
+## Fehérje / sikér / W-érték (műszaki mutatók)
+
+A `scrapers/common.py` `extract_technical_specs()` függvénye a termékleírás szövegéből
+(ha a malom közli) megpróbálja kinyerni a fehérjetartalmat, a sikértartalmat és a
+W-értéket (sütőipari érték) - ugyanolyan ritkán változó, "metaadat" jellegű infóként
+kezelve, mint az adalékmentesség. Ez NEM minden malomnál és NEM minden terméknél
+érhető el - ahol a malom nem közli, a mező `null` marad, ezt a frontend "nincs adat"
+felirattal jelzi, nem hibaként.
+
+A frontendben ez három helyen jelenik meg:
+- a fő összehasonlító táblában, egy sortolható "Fehérje" oszlopban (mini sávdiagrammal,
+  hover-re a sikér/W-érték is látszik, ha van),
+- a **"Liszt fajták kisokos"** szekcióban - oktató tartalom a liszt-jelölés rendszeréről
+  (BL/RL kódok, hamutartalom), a gabonaféle/liszt-fajta típusokról (búza, rozs, tönköly,
+  királybúza, kamut, alakor, borsó stb.) és arról, mit jelent a fehérje-/sikértartalom
+  és a W-érték - ez a `data/flour_types.json`-ból töltődik, kézzel karbantartott,
+  általános szakmai irányértékekkel, NEM a napi scraping adata,
+- a **"Technikai összehasonlítás malmonként"** szekcióban - liszttípus és mutató
+  (fehérje/sikér/W-érték) választható, interaktív sávdiagram és táblázat hasonlítja
+  össze a malmok TÉNYLEGES, saját oldalukon közölt adatait (ha vannak) `data/current.json`-ból.
 
 ## Első futtatás (fontos!)
 

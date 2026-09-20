@@ -132,6 +132,8 @@ def parse_product_page(url: str, html_text: str) -> List[dict]:
         additive_free = "yes"
         additive_free_source = "scraped_page_text"
 
+    technical_specs = common.extract_technical_specs(full_text)
+
     flour_type = _guess_flour_type(title)
     bl_code = _guess_bl_code(title)
     whole_grain = "teljes kiőrlésű" in title.lower() or "teljes kiorlesu" in title.lower() or (bl_code or "").endswith(("200", "112"))
@@ -169,6 +171,7 @@ def parse_product_page(url: str, html_text: str) -> List[dict]:
                     additive_free=additive_free,
                     additive_free_source=additive_free_source,
                     organic_certified=False,
+                    technical_specs=technical_specs,
                 )
             )
     else:
@@ -196,6 +199,7 @@ def parse_product_page(url: str, html_text: str) -> List[dict]:
                 additive_free=additive_free,
                 additive_free_source=additive_free_source,
                 organic_certified=False,
+                technical_specs=technical_specs,
             )
         )
 

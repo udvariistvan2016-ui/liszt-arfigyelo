@@ -7,9 +7,12 @@ nélkül.
 """
 from __future__ import annotations
 
+import re
 from typing import List
 
 from . import common
+
+_TAG_RE = re.compile(r"<[^>]+>")
 
 MILL_ID = "csoroszlya_farm"
 MILL_NAME = "Csoroszlya Farm"
@@ -54,6 +57,13 @@ def fetch_products() -> List[dict]:
         product_url = f"{BASE_URL}/products/{handle}"
         whole_grain = "teljes kiőrlésű" in title.lower() or "teljes kiorlesu" in title.lower()
 
+        # a Shopify products.json "body_html" mezője (ha van) a termékleírás,
+        # ott néha szerepel fehérje-/sikértartalom, W-érték - ugyanaz a ritkán
+        # változó "metaadat" jelleg, mint az adalékmentesség
+        body_html = shopify_product.get("body_html") or ""
+        description_text = _TAG_RE.sub(" ", body_html)
+        technical_specs = common.extract_technical_specs(description_text)
+
         for variant in shopify_product.get("variants", []):
             variant_title = variant.get("title", "")
             package_kg = common.parse_package_kg(variant_title) or common.parse_package_kg(title)
@@ -83,6 +93,7 @@ def fetch_products() -> List[dict]:
                     additive_free_source="mill_meta_default",
                     organic_certified=True,
                     organic_cert_body=None,
+                    technical_specs=technical_specs,
                 )
             )
 

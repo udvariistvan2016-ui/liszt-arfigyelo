@@ -300,6 +300,195 @@
     text-align: center;
   }
 
+  /* --- fehérje / műszaki mutatók --- */
+  .protein-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 74px;
+  }
+  .protein-value {
+    font-variant-numeric: tabular-nums;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+  .protein-bar-track {
+    position: relative;
+    width: 100%;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--gridline);
+    overflow: hidden;
+    cursor: default;
+  }
+  .protein-bar-fill {
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    border-radius: 999px;
+    background: var(--series-3);
+  }
+  .no-data-text {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+  }
+
+  /* --- oktató szekció (liszt fajták) --- */
+  .aspect-toggle {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .aspect-btn {
+    font: inherit;
+    font-size: 0.85rem;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--baseline);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+  }
+  .aspect-btn.active {
+    background: var(--text-primary);
+    color: var(--page-plane);
+    border-color: var(--text-primary);
+  }
+  .aspect-panel h3 {
+    margin: 0 0 6px;
+    font-size: 1rem;
+  }
+  .aspect-panel p {
+    margin: 0 0 12px;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+  }
+  .range-scale {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+  .range-scale-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.82rem;
+  }
+  .range-scale-label {
+    width: 150px;
+    flex: 0 0 auto;
+    color: var(--text-secondary);
+  }
+  .range-scale-track {
+    position: relative;
+    flex: 1 1 auto;
+    height: 14px;
+    background: var(--gridline);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .range-scale-fill {
+    position: absolute;
+    top: 0; bottom: 0;
+    background: var(--series-2);
+    border-radius: 4px;
+  }
+  .range-scale-value {
+    width: 90px;
+    flex: 0 0 auto;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-muted);
+  }
+
+  .flour-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+    margin-top: 6px;
+  }
+  .flour-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    background: var(--page-plane);
+  }
+  .flour-card h4 {
+    margin: 0 0 4px;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+  }
+  .flour-card .category-tag {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    white-space: nowrap;
+  }
+  .flour-card p {
+    margin: 6px 0;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+  }
+  .flour-card .notes {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+  }
+
+  .bl-table-wrap { margin-top: 20px; overflow-x: auto; }
+  .bl-table-wrap h3 { font-size: 1rem; margin: 0 0 10px; }
+
+  /* --- technikai összehasonlító szekció --- */
+  .tech-chart-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 0.83rem;
+  }
+  .tech-chart-label {
+    width: 190px;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .tech-chart-track {
+    position: relative;
+    flex: 1 1 auto;
+    height: 18px;
+    background: var(--gridline);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .tech-chart-fill {
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    border-radius: 5px;
+    cursor: default;
+    display: flex;
+    align-items: center;
+  }
+  .tech-chart-fill .fill-label {
+    position: absolute;
+    left: 6px;
+    font-size: 0.72rem;
+    color: #fff;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .tech-note {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
   footer {
     margin-top: 40px;
     padding-top: 16px;
@@ -320,10 +509,13 @@
     tbody td {
       display: flex;
       justify-content: space-between;
+      align-items: flex-start;
       gap: 10px;
       border-bottom: none;
       padding: 4px 0;
     }
+    tbody td.num { text-align: right; }
+    tbody td .protein-cell { align-items: flex-end; }
     tbody td::before {
       content: attr(data-label);
       color: var(--text-muted);
@@ -398,18 +590,73 @@
               <th class="num" data-sort="package_kg">Kiszerelés</th>
               <th class="num" data-sort="price_huf">Ár</th>
               <th class="num sorted" data-sort="price_per_kg">Ár/kg</th>
+              <th class="num" data-sort="protein" title="Fehérjetartalom, ha a malom oldala közli">Fehérje</th>
               <th>Készlet</th>
               <th>Adalékmentes</th>
               <th>Forrás</th>
             </tr>
           </thead>
           <tbody id="product-tbody">
-            <tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:24px;">Adatok betöltése…</td></tr>
+            <tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:24px;">Adatok betöltése…</td></tr>
           </tbody>
         </table>
       </div>
 
       <div class="legend" id="table-legend"></div>
+    </div>
+  </section>
+
+  <section id="flour-types-section">
+    <h2>Liszt fajták kisokos</h2>
+    <div class="card">
+      <p style="margin-top:0;color:var(--text-secondary);font-size:0.9rem;">
+        Mi számít, ha lisztet választasz? Válts a szempontok közt, majd nézd meg lent az egyes gabonaféléket/liszt-fajtákat.
+      </p>
+      <div class="aspect-toggle" id="aspect-toggle"></div>
+      <div class="aspect-panel" id="aspect-panel"></div>
+
+      <div class="flour-grid" id="flour-grid"></div>
+
+      <div class="bl-table-wrap">
+        <h3>BL / RL kódok (hamutartalom szerinti besorolás)</h3>
+        <table id="bl-codes-table">
+          <thead>
+            <tr>
+              <th>Kód</th>
+              <th>Gabona</th>
+              <th class="num">Hamutartalom</th>
+              <th class="num">Fehérje (irányérték)</th>
+              <th>Jellemző felhasználás</th>
+            </tr>
+          </thead>
+          <tbody id="bl-codes-tbody"></tbody>
+        </table>
+      </div>
+
+      <p class="tech-note" id="flour-types-note"></p>
+    </div>
+  </section>
+
+  <section id="tech-compare-section">
+    <h2>Technikai összehasonlítás malmonként</h2>
+    <div class="card">
+      <div class="filters">
+        <div class="filter-field">
+          <label for="tech-type">Liszttípus</label>
+          <select id="tech-type"></select>
+        </div>
+        <div class="filter-field">
+          <label for="tech-metric">Mutató</label>
+          <select id="tech-metric">
+            <option value="protein">Fehérjetartalom (%)</option>
+            <option value="gluten">Sikértartalom (%)</option>
+            <option value="w_value">W-érték</option>
+          </select>
+        </div>
+      </div>
+      <div id="tech-chart"></div>
+      <div id="tech-table-wrap" style="overflow-x:auto;margin-top:16px;"></div>
+      <p class="tech-note">A malmok nem mindig teszik közzé ezeket az adatokat a termékoldalon - ahol nincs érték, ott a scraper sem tud mit kinyerni, ez nem hibát jelez. Az itt látható tartományok a malom saját megadott adatai (ha vannak), NEM a "Liszt fajták kisokos" általános irányértékei.</p>
     </div>
   </section>
 
@@ -468,6 +715,7 @@
   var state = {
     current: null,
     history: [], // [{generated_at, products: [...]}]
+    flourTypes: null,
     filters: {
       search: "",
       type: "",
@@ -476,7 +724,9 @@
       inStockOnly: false,
       additiveFreeOnly: false,
       mills: new Set(MILL_ORDER)
-    }
+    },
+    aspect: "protein", // "protein" | "gluten" | "w_value" - a liszt kisokos aktív szempontja
+    techMetric: "protein" // "protein" | "gluten" | "w_value" - technikai összehasonlító aktív mutatója
   };
 
   function fmtHuf(n) {
@@ -487,6 +737,14 @@
   function fmtKg(n) {
     if (n === null || n === undefined) return "—";
     return (Number.isInteger(n) ? n : n.toFixed(1)) + " kg";
+  }
+
+  function fmtRange(min, max, unit) {
+    unit = unit || "";
+    if (min == null && max == null) return null;
+    if (min != null && max != null && min !== max) return min + "–" + max + unit;
+    var v = min != null ? min : max;
+    return v + unit;
   }
 
   function additiveBadge(product) {
@@ -506,6 +764,30 @@
   function millDot(millId) {
     var c = MILL_COLORS[millId] || "var(--text-muted)";
     return '<span class="mill-dot" style="background:' + c + '"></span>';
+  }
+
+  var PROTEIN_SCALE_MIN = 7, PROTEIN_SCALE_MAX = 20;
+
+  function proteinMid(p) {
+    if (p.protein_percent_min == null && p.protein_percent_max == null) return null;
+    if (p.protein_percent_min != null && p.protein_percent_max != null) return (p.protein_percent_min + p.protein_percent_max) / 2;
+    return p.protein_percent_min != null ? p.protein_percent_min : p.protein_percent_max;
+  }
+
+  function proteinCell(p) {
+    var mid = proteinMid(p);
+    if (mid == null) return '<span class="no-data-text">nincs adat</span>';
+    var label = fmtRange(p.protein_percent_min, p.protein_percent_max, "%");
+    var pct = Math.max(0, Math.min(100, (mid - PROTEIN_SCALE_MIN) / (PROTEIN_SCALE_MAX - PROTEIN_SCALE_MIN) * 100));
+    var titleBits = [label + " fehérje"];
+    var glutenLabel = fmtRange(p.gluten_percent_min, p.gluten_percent_max, "%");
+    var wLabel = fmtRange(p.w_value_min, p.w_value_max, "");
+    if (glutenLabel) titleBits.push(glutenLabel + " sikér");
+    if (wLabel) titleBits.push("W-érték " + wLabel);
+    return '<div class="protein-cell" title="' + titleBits.join(" · ") + '">' +
+      '<span class="protein-value">' + label + '</span>' +
+      '<span class="protein-bar-track"><span class="protein-bar-fill" style="width:' + pct.toFixed(0) + '%"></span></span>' +
+      '</div>';
   }
 
   function populateSelect(select, values, allLabel) {
@@ -561,6 +843,11 @@
           return (a.mill || "").localeCompare(b.mill || "", "hu");
         case "name":
           return (a.product_name || "").localeCompare(b.product_name || "", "hu");
+        case "protein_desc":
+          return (proteinMid(b) == null ? -1 : proteinMid(b)) - (proteinMid(a) == null ? -1 : proteinMid(a));
+        case "protein_asc":
+          var apm = proteinMid(a), bpm = proteinMid(b);
+          return (apm == null ? Infinity : apm) - (bpm == null ? Infinity : bpm);
         case "price_per_kg_asc":
         default:
           var av = a.price_per_kg_huf == null ? Infinity : a.price_per_kg_huf;
@@ -571,7 +858,7 @@
 
     var tbody = document.getElementById("product-tbody");
     if (filtered.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:24px;">Nincs a szűrésnek megfelelő termék.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:24px;">Nincs a szűrésnek megfelelő termék.</td></tr>';
       return;
     }
 
@@ -586,6 +873,7 @@
         '<td class="num" data-label="Kiszerelés">' + fmtKg(p.package_kg) + '</td>' +
         '<td class="num" data-label="Ár">' + fmtHuf(p.price_huf) + '</td>' +
         '<td class="num" data-label="Ár/kg"><span class="price-per-kg' + (isBest ? " best" : "") + '">' + fmtHuf(p.price_per_kg_huf) + (isBest ? " ★" : "") + '</span></td>' +
+        '<td class="num" data-label="Fehérje">' + proteinCell(p) + '</td>' +
         '<td data-label="Készlet">' + stockBadge(p) + '</td>' +
         '<td data-label="Adalékmentes">' + additiveBadge(p) + '</td>' +
         '<td data-label="Forrás"><a class="source-link" href="' + (p.source_url || "#") + '" target="_blank" rel="noopener">oldal →</a></td>' +
@@ -822,9 +1110,11 @@
     document.querySelectorAll("#product-table thead th[data-sort]").forEach(function (th) {
       th.addEventListener("click", function () {
         var key = th.getAttribute("data-sort");
-        var map = { price_per_kg: "price_per_kg_asc", mill: "mill", name: "name" };
+        var map = { price_per_kg: "price_per_kg_asc", mill: "mill", name: "name", protein: "protein_desc" };
         if (key === "price_per_kg") {
           state.filters.sort = state.filters.sort === "price_per_kg_asc" ? "price_per_kg_desc" : "price_per_kg_asc";
+        } else if (key === "protein") {
+          state.filters.sort = state.filters.sort === "protein_desc" ? "protein_asc" : "protein_desc";
         } else if (map[key]) {
           state.filters.sort = map[key];
         }
@@ -861,9 +1151,222 @@
     banner.classList.add("visible");
   }
 
-  function init(current, historyEntries) {
+  // --- Liszt fajták kisokos (oktató szekció, data/flour_types.json) ---
+
+  var ASPECTS = [
+    { key: "protein", label: "Fehérje", guideKey: "protein_guide", unit: "%", scaleMin: 6, scaleMax: 20, cardField: "typical_protein_percent" },
+    { key: "gluten", label: "Sikér", guideKey: "gluten_guide", unit: "%", scaleMin: 15, scaleMax: 42, cardField: null },
+    { key: "w_value", label: "W-érték", guideKey: "w_value_guide", unit: "", scaleMin: 0, scaleMax: 450, cardField: null }
+  ];
+
+  function renderAspectToggle() {
+    var container = document.getElementById("aspect-toggle");
+    container.innerHTML = ASPECTS.map(function (a) {
+      return '<button type="button" class="aspect-btn' + (state.aspect === a.key ? " active" : "") + '" data-aspect="' + a.key + '">' + a.label + '</button>';
+    }).join("");
+    container.querySelectorAll(".aspect-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        state.aspect = btn.getAttribute("data-aspect");
+        renderAspectToggle();
+        renderAspectPanel();
+      });
+    });
+  }
+
+  function renderAspectPanel() {
+    var panel = document.getElementById("aspect-panel");
+    var ft = state.flourTypes;
+    if (!ft) { panel.innerHTML = ""; return; }
+    var aspect = ASPECTS.filter(function (a) { return a.key === state.aspect; })[0];
+    var guide = ft[aspect.guideKey];
+    if (!guide) { panel.innerHTML = ""; return; }
+
+    var ranges = guide.ranges || (guide.typical_ranges_percent || []).map(function (r) {
+      return { label: r.label, w_min: r.min, w_max: r.max, use: null };
+    });
+    var scaleMax = Math.max(aspect.scaleMax, Math.max.apply(null, ranges.map(function (r) { return r.w_max || r.max || 0; })));
+
+    var rowsHtml = ranges.map(function (r) {
+      var lo = r.w_min != null ? r.w_min : r.min;
+      var hi = r.w_max != null ? r.w_max : r.max;
+      var leftPct = Math.max(0, lo / scaleMax * 100);
+      var widthPct = Math.max(1.5, (hi - lo) / scaleMax * 100);
+      var valueLabel = fmtRange(lo, hi, aspect.unit) || "—";
+      var title = r.label + ": " + valueLabel + (r.use ? " · " + r.use : "");
+      return '<div class="range-scale-row" title="' + title + '">' +
+        '<span class="range-scale-label">' + r.label + '</span>' +
+        '<span class="range-scale-track"><span class="range-scale-fill" style="left:' + leftPct.toFixed(1) + '%;width:' + widthPct.toFixed(1) + '%"></span></span>' +
+        '<span class="range-scale-value">' + valueLabel + '</span>' +
+        '</div>';
+    }).join("");
+
+    panel.innerHTML =
+      '<h3>' + guide.title + '</h3>' +
+      '<p>' + guide.description + '</p>' +
+      '<div class="range-scale">' + rowsHtml + '</div>' +
+      (guide.caveat ? '<p class="tech-note">' + guide.caveat + '</p>' : "");
+  }
+
+  function grainProteinBar(g) {
+    var r = g.typical_protein_percent;
+    if (!r) return "";
+    var lo = r.min, hi = r.max;
+    var scaleMin = 6, scaleMax = 26;
+    var leftPct = Math.max(0, (lo - scaleMin) / (scaleMax - scaleMin) * 100);
+    var widthPct = Math.max(2, (hi - lo) / (scaleMax - scaleMin) * 100);
+    var label = fmtRange(lo, hi, "%");
+    return '<span class="range-scale-track" style="height:8px;" title="' + label + ' fehérje">' +
+      '<span class="range-scale-fill" style="left:' + leftPct.toFixed(1) + '%;width:' + widthPct.toFixed(1) + '%"></span>' +
+      '</span>';
+  }
+
+  function renderGrainCards() {
+    var grid = document.getElementById("flour-grid");
+    var ft = state.flourTypes;
+    if (!ft || !Array.isArray(ft.grain_types)) { grid.innerHTML = ""; return; }
+    grid.innerHTML = ft.grain_types.map(function (g) {
+      var proteinLabel = g.typical_protein_percent ? fmtRange(g.typical_protein_percent.min, g.typical_protein_percent.max, "%") : null;
+      return '<div class="flour-card">' +
+        '<h4>' + g.name + '<span class="category-tag">' + (g.category || "") + '</span></h4>' +
+        '<p>' + g.description + '</p>' +
+        (proteinLabel ?
+          '<p><strong>' + proteinLabel + '</strong> fehérje (irányérték)</p>' + grainProteinBar(g) :
+          '') +
+        (g.gluten_free ? '<p><span class="badge badge-bio">gluténmentes</span></p>' : "") +
+        (g.notes ? '<p class="notes">' + g.notes + '</p>' : "") +
+        '</div>';
+    }).join("");
+  }
+
+  function renderBlCodesTable() {
+    var tbody = document.getElementById("bl-codes-tbody");
+    var ft = state.flourTypes;
+    if (!ft || !Array.isArray(ft.bl_codes)) { tbody.innerHTML = ""; return; }
+    tbody.innerHTML = ft.bl_codes.map(function (c) {
+      var protLabel = c.typical_protein_percent ? fmtRange(c.typical_protein_percent.min, c.typical_protein_percent.max, "%") : "—";
+      return '<tr title="' + (c.description || "") + '">' +
+        '<td data-label="Kód"><strong>' + c.code + '</strong></td>' +
+        '<td data-label="Gabona">' + (c.grain || "") + '</td>' +
+        '<td class="num" data-label="Hamutartalom">' + (c.ash_content_percent != null ? c.ash_content_percent + "%" : "—") + '</td>' +
+        '<td class="num" data-label="Fehérje">' + protLabel + '</td>' +
+        '<td data-label="Felhasználás">' + (c.typical_use || "") + '</td>' +
+        '</tr>';
+    }).join("");
+  }
+
+  function renderFlourTypesSection() {
+    var ft = state.flourTypes;
+    var note = document.getElementById("flour-types-note");
+    if (!ft) {
+      document.getElementById("aspect-panel").innerHTML = "";
+      document.getElementById("flour-grid").innerHTML = "";
+      document.getElementById("bl-codes-tbody").innerHTML = "";
+      note.textContent = "Az oktató tartalom jelenleg nem elérhető.";
+      return;
+    }
+    renderAspectToggle();
+    renderAspectPanel();
+    renderGrainCards();
+    renderBlCodesTable();
+    note.textContent = ft.last_reviewed
+      ? "Ez a kisokos kézzel karbantartott, általános szakmai irányértékeket mutat, utoljára ellenőrizve: " + ft.last_reviewed + ". Nem a napi scraping adata, és nem egy adott mill egy adott tételének mért értéke."
+      : "";
+  }
+
+  // --- Technikai összehasonlítás malmonként (data/current.json alapján, interaktív) ---
+
+  var TECH_METRICS = {
+    protein: { label: "fehérje", unit: "%", minField: "protein_percent_min", maxField: "protein_percent_max", scaleMax: 20 },
+    gluten: { label: "sikér", unit: "%", minField: "gluten_percent_min", maxField: "gluten_percent_max", scaleMax: 42 },
+    w_value: { label: "W-érték", unit: "", minField: "w_value_min", maxField: "w_value_max", scaleMax: 450 }
+  };
+
+  function techMid(p, metric) {
+    var lo = p[metric.minField], hi = p[metric.maxField];
+    if (lo == null && hi == null) return null;
+    if (lo != null && hi != null) return (lo + hi) / 2;
+    return lo != null ? lo : hi;
+  }
+
+  function renderTechChart(flourType) {
+    var container = document.getElementById("tech-chart");
+    var metric = TECH_METRICS[state.techMetric];
+    var products = (state.current.products || []).filter(function (p) {
+      return (!flourType || p.flour_type === flourType) && techMid(p, metric) != null;
+    });
+    products.sort(function (a, b) { return techMid(b, metric) - techMid(a, metric); });
+
+    if (products.length === 0) {
+      container.innerHTML = '<div class="chart-empty">Ehhez a liszttípushoz jelenleg egyik malomnál sincs közzétett ' + metric.label + '-adat. Amint egy malom terméklapja közli, a következő napi futás után itt megjelenik.</div>';
+      return;
+    }
+
+    container.innerHTML = products.map(function (p) {
+      var mid = techMid(p, metric);
+      var pct = Math.max(2, Math.min(100, mid / metric.scaleMax * 100));
+      var label = fmtRange(p[metric.minField], p[metric.maxField], metric.unit);
+      var color = MILL_COLORS[p.mill_id] || "var(--text-muted)";
+      var title = p.mill + " · " + p.product_name + " · " + label + " " + metric.label;
+      return '<div class="tech-chart-row">' +
+        '<span class="tech-chart-label" title="' + p.mill + " - " + p.product_name + '">' + millDot(p.mill_id) + (p.product_name || "") + '</span>' +
+        '<span class="tech-chart-track">' +
+          '<span class="tech-chart-fill" style="width:' + pct.toFixed(1) + '%;background:' + color + '" title="' + title + '">' +
+            '<span class="fill-label">' + label + '</span>' +
+          '</span>' +
+        '</span>' +
+        '</div>';
+    }).join("");
+  }
+
+  function renderTechTable(flourType) {
+    var wrap = document.getElementById("tech-table-wrap");
+    var products = (state.current.products || []).filter(function (p) {
+      return !flourType || p.flour_type === flourType;
+    }).filter(function (p) {
+      return p.protein_percent_min != null || p.gluten_percent_min != null || p.w_value_min != null;
+    });
+
+    if (products.length === 0) {
+      wrap.innerHTML = "";
+      return;
+    }
+
+    products.sort(function (a, b) { return (proteinMid(b) || -1) - (proteinMid(a) || -1); });
+
+    wrap.innerHTML = '<table><thead><tr>' +
+      '<th>Malom</th><th>Termék</th><th class="num">Fehérje</th><th class="num">Sikér</th><th class="num">W-érték</th>' +
+      '</tr></thead><tbody>' +
+      products.map(function (p) {
+        return '<tr>' +
+          '<td data-label="Malom">' + millDot(p.mill_id) + (p.mill || "") + '</td>' +
+          '<td data-label="Termék">' + (p.product_name || "") + '</td>' +
+          '<td class="num" data-label="Fehérje">' + (fmtRange(p.protein_percent_min, p.protein_percent_max, "%") || "—") + '</td>' +
+          '<td class="num" data-label="Sikér">' + (fmtRange(p.gluten_percent_min, p.gluten_percent_max, "%") || "—") + '</td>' +
+          '<td class="num" data-label="W-érték">' + (fmtRange(p.w_value_min, p.w_value_max, "") || "—") + '</td>' +
+          '</tr>';
+      }).join("") +
+      '</tbody></table>';
+  }
+
+  function renderTechCompareSection() {
+    var typeSelect = document.getElementById("tech-type");
+    var flourType = typeSelect.value;
+    renderTechChart(flourType);
+    renderTechTable(flourType);
+  }
+
+  function setupTechListeners() {
+    document.getElementById("tech-type").addEventListener("change", renderTechCompareSection);
+    document.getElementById("tech-metric").addEventListener("change", function (e) {
+      state.techMetric = e.target.value;
+      renderTechCompareSection();
+    });
+  }
+
+  function init(current, historyEntries, flourTypes) {
     state.current = current;
     state.history = historyEntries;
+    state.flourTypes = flourTypes;
 
     renderLastUpdated();
     renderErrorBanner();
@@ -871,15 +1374,19 @@
     renderTableLegend();
     renderShipping();
     renderShippingCalculator();
+    renderFlourTypesSection();
 
     var products = current.products || [];
     populateSelect(document.getElementById("f-type"), uniqueSorted(products.map(function (p) { return p.flour_type; })), "Mind");
     populateSelect(document.getElementById("f-package"), uniqueSorted(products.map(function (p) { return p.package_kg; })).map(String), "Mind");
     populateSelect(document.getElementById("hist-type"), uniqueSorted(products.map(function (p) { return p.flour_type; })), "Összes típus (átlag)");
+    populateSelect(document.getElementById("tech-type"), uniqueSorted(products.map(function (p) { return p.flour_type; })), "Összes típus");
 
     setupFilterListeners();
+    setupTechListeners();
     applyFiltersAndRender();
     renderHistoryChart();
+    renderTechCompareSection();
   }
 
   function parseJsonl(text) {
@@ -892,9 +1399,10 @@
     fetch("data/current.json").then(function (r) { return r.json(); }).catch(function () {
       return { generated_at: null, mills: {}, products: [], errors: {} };
     }),
-    fetch("data/history.jsonl").then(function (r) { return r.text(); }).then(parseJsonl).catch(function () { return []; })
+    fetch("data/history.jsonl").then(function (r) { return r.text(); }).then(parseJsonl).catch(function () { return []; }),
+    fetch("data/flour_types.json").then(function (r) { return r.json(); }).catch(function () { return null; })
   ]).then(function (results) {
-    init(results[0], results[1]);
+    init(results[0], results[1], results[2]);
   });
 })();
 </script>
